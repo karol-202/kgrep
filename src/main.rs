@@ -1,11 +1,12 @@
 use std::env;
 use std::fs::File;
 use std::io;
-use std::io::Error as IoError;
 
 use crate::util::StringRead;
+use crate::error::{Error, ArgsError};
 
 mod util;
+mod error;
 
 struct Args {
     search_pattern: String,
@@ -15,40 +16,6 @@ struct Args {
 enum InputSource {
     File(String),
     Stdin,
-}
-
-enum Error {
-    Io(std::io::Error),
-    Args(ArgsError),
-}
-
-impl From<IoError> for Error {
-    fn from(io_error: IoError) -> Self {
-        Error::Io(io_error)
-    }
-}
-
-impl ToString for Error {
-    fn to_string(&self) -> String {
-        match self {
-            Error::Io(io_error) => format!("IO error: {}", io_error),
-            Error::Args(args_error) => format!("Invalid arguments: {}", args_error.to_string()),
-        }
-    }
-}
-
-enum ArgsError {
-    TooFew,
-    TooMany,
-}
-
-impl ToString for ArgsError {
-    fn to_string(&self) -> String {
-        match self {
-            ArgsError::TooFew => "Too few arguments",
-            ArgsError::TooMany => "Too many arguments",
-        }.to_string()
-    }
 }
 
 fn main() {
