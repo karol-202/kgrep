@@ -1,19 +1,13 @@
 use std::io::Error as IoError;
 
 pub enum Error {
-    Io(std::io::Error),
+    Io(IoError),
     Args(ArgsError),
 }
 
 pub enum ArgsError {
     TooFew,
     TooMany,
-}
-
-impl From<IoError> for Error {
-    fn from(io_error: IoError) -> Self {
-        Error::Io(io_error)
-    }
 }
 
 impl ToString for Error {
@@ -31,5 +25,11 @@ impl ToString for ArgsError {
             ArgsError::TooFew => "Too few arguments",
             ArgsError::TooMany => "Too many arguments",
         }.to_string()
+    }
+}
+
+impl From<IoError> for Error {
+    fn from(io_error: IoError) -> Self {
+        Error::Io(io_error)
     }
 }

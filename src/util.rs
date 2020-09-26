@@ -1,12 +1,11 @@
-use std::io::{Result, Read};
+use std::io::{BufRead, BufReader, Lines, Read};
 
-pub trait StringRead {
-    fn read_to_new_string(&mut self) -> Result<String>;
+pub trait LinesRead<R: Read> {
+    fn read_lines(self) -> Lines<BufReader<R>>;
 }
 
-impl<T: Read> StringRead for T {
-    fn read_to_new_string(&mut self) -> Result<String> {
-        let mut string = String::new();
-        self.read_to_string(&mut string).map(|_| string)
+impl<R: Read> LinesRead<R> for R {
+    fn read_lines(self) -> Lines<BufReader<R>> {
+        BufReader::new(self).lines()
     }
 }
